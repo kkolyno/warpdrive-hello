@@ -1,3 +1,12 @@
 # Local working scratch
 *.log
 *.tmp
+
+# macOS
+.DS_Store
+
+# Node tooling (orchestrator authors who add a package.json)
+node_modules/
+
+# Agent-installed config that may include local-only state
+.claude/settings.local.json
