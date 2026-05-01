@@ -1,0 +1,55 @@
+manifest: 3
+name: hello-world
+description: "Reference orchestrator demonstrating the full WarpDrive contract surface."
+version: "1.0.0"
+infrastructure:
+  requires: [bash, tmux]
+  environment:
+    - name: HELLO_DEFAULT_NAME
+      required: false
+      description: "Optional default name for greetings. Defaults to 'world'."
+setup:
+  command: ./setup.sh
+sessions:
+  - name: main
+    pattern: hello-main
+    role: primary
+    description: "Primary session for hello-world interaction."
+actions:
+  - id: open-main
+    name: Open Main
+    description: "Create the primary tmux session and return attach info."
+    command: ./scripts/open-main.sh
+    session: main
+  - id: greet
+    name: Greet
+    description: "Append a greeting line and bump greet counter."
+    command: ./scripts/greet.sh
+    session: main
+    params:
+      - name: who
+        type: string
+        required: true
+        description: "Name of the entity to greet."
+      - name: tone
+        type: enum
+        required: false
+        options: [warm, formal, terse]
+        description: "Tone of the greeting."
+  - id: long-task
+    name: Long Task
+    description: "Spawn a 30s background task that updates status as it runs."
+    command: ./scripts/long-task.sh
+    async: true
+userAgentIntegration:
+  claude:
+    commands:
+      - name: hello
+        source: agent/hello.md
+    files:
+      - source: agent/skills/**
+        targetDir: .claude/skills
+    settings:
+      model: claude-opus-4-7
+      env:
+        HELLO_ORCHESTRATOR_INSTALLED: "true"
