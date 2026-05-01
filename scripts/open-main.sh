@@ -8,8 +8,4 @@ set -euo pipefail
 tmux -L "$WARPDRIVE_TMUX_SOCKET" new-session -A -d -s hello-main \
   "bash -lc 'echo \"hello-main session ready\"; exec bash -l'"
 
-# Render a banner in the session showing orchestrator state.
-tmux -L "$WARPDRIVE_TMUX_SOCKET" send-keys -t hello-main \
-  "printf '\\n=== warpdrive-hello: hello-main session opened ===\\n'" Enter
-
 echo "open-main: hello-main session is up"
