@@ -16,20 +16,18 @@ write_status() {
 
 for i in 1 2 3 4 5 6; do
   NOW="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-  UPDATED=$(jq \
+  UPDATED=$(cat "$WARPDRIVE_STATUS_FILE" | jq \
     --arg summary "Long task: ${i}/6" \
     --arg now "$NOW" \
-    '.summary = $summary | .updatedAt = $now | .metadata.lastTick = $now' \
-    "$WARPDRIVE_STATUS_FILE")
+    '.summary = $summary | .updatedAt = $now | .metadata.lastTick = $now')
   write_status "$UPDATED"
   sleep 5
 done
 
 NOW="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-UPDATED=$(jq \
+UPDATED=$(cat "$WARPDRIVE_STATUS_FILE" | jq \
   --arg now "$NOW" \
-  '.summary = "Long task complete" | .updatedAt = $now | .metadata.taskCompletedAt = $now' \
-  "$WARPDRIVE_STATUS_FILE")
+  '.summary = "Long task complete" | .updatedAt = $now | .metadata.taskCompletedAt = $now')
 write_status "$UPDATED"
 WORKER_EOF
 chmod +x "$WORKER"
